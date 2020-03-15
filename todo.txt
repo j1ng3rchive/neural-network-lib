@@ -1,0 +1,16 @@
+TODO:
+
+Implement gradient descent training for LinearNeuralNetwork
+
+Experiment with some type of hyperoptimization
+  * Geometric decrease when losing progress
+  * Factor related to cosine similarity of previous and new normed gradients: beta3 = beta2 * 2 ^ n(g1).n(g2)
+      * On the other hand, these might not work. Check the algs4opt textbook
+
+Test to make sure all the code actually works
+   * None of it has actually been tested so far.
+   * It'll probably work on the first try.
+
+Expand to more complex types of Neural Networks
+   * Need to understand how Recurrent Neural Networks and LSTM and all that jazz work.
+   * Add some type of merge functionality to tensor.js
