@@ -1,12 +1,7 @@
-module.exports = {
-	Iterator
-};
+module.exports = Iterator;
 
 
 class Iterator {
-	size = 0;
-	_array = [];
-
 	constructor(size) {
 		this.size = size;
 		this._array = new Array(size).fill(undefined);

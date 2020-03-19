@@ -1,13 +1,9 @@
-import "iterator.js";
-import "tensor.js";
+let Tensor = require("iterator.js");
+let Iterator = require("tensor.js");
 
 class LinearNeuralNetwork {
-	weights = null;
-	biases = null;
-	structure = null;
-	neurons = null;
-
 	constructor(structure) {
+		this.neurons = null;
 		this.initializeStructure(structure);
 		this.initializeWeightsToOne();
 		this.initializeBiasesToZero();
@@ -45,35 +41,41 @@ class LinearNeuralNetwork {
 	}
 
 	initializeStructure(structure) {
-		this.structure = LinearNeuralNetworkStructure.from(structure);
+		this.structure = LinearNeuralNetwork.Structure.from(structure);
 	}
 
 	execute(tensorInput) {
 		this.neurons = new Tensor(
 			this.getDepth(),
-			layer => neuralNetwork.getSizeAtLayer(layer)
+			layer => this.neuralNetwork.getSizeAtLayer(layer)
 		).fill(0);
 		this.neurons.setIndex(tensorInput, 0);
+
+		//We skip 0 because the 0th layer is already defined
 		for(let layer = 1; layer < this.getDepth(); layer++) {
-			let nextNeuralLayer = calculateNeuralLayer(layer);
+			let nextNeuralLayer = this.calculateNeuralLayer(layer);
 			this.neurons.setIndex(nextNeuralLayer, layer);
 		}
-		return this.neurons.getIndex(this.getDepth() - 1);
 	}
 
 	calculateNeuralLayer(layer) {
 		return this.weights.getIndex(layer - 1)
-		.vectorMultiply(this.neurons.getIndex(layer - 1))
-		.add(this.biases.getIndex(layer - 1))
-		.RELU();
+			.vectorMultiply(this.neurons.getIndex(layer - 1))
+			.add(this.biases.getIndex(layer - 1))
+			.RELU();
+	}
+
+	calculateWeightGradient(tensorInput) {
+		//TODO
+	}
+
+	calculateWeightDifferentialOfInputForPath(tensorInput, path) {
+		//TODO
 	}
 }
 
 
-class LinearNeuralNetworkStructure {
-	depth = 0;
-	sizeArray = [];
-
+LinearNeuralNetwork.Structure = class LinearNeuralNetworkStructure {
 	constructor(sizeArray) {
 		this.sizeArray = sizeArray;
 		this.depth = sizeArray.length;
@@ -100,10 +102,12 @@ class LinearNeuralNetworkStructure {
 	}
 
 	static from(structure) {
-		if(structure instanceof LinearNeuralNetworkStructure) {
+		if(structure instanceof LinearNeuralNetwork.Structure) {
 			return structure;
 		} else {
-			return LinearNeuralNetworkStructure(structure);
+			return LinearNeuralNetwork.Structure(structure);
 		}
 	}
 }
+
+module.exports = LinearNeuralNetwork;
